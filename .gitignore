@@ -1,0 +1,17 @@
+# chalamet
+target/
+Cargo.lock
+*.json
+
+# misc
+.DS_Store
+
+# benchmarks
+benchmarks-16-1kb.txt
+benchmarks-17-1kb.txt
+benchmarks-18-1kb.txt
+benchmarks-19-1kb.txt
+benchmarks-20-1kb.txt
+benchmarks-14-kw.txt
+benchmarks-17-kw.txt
+benchmarks-20-kw.txt
