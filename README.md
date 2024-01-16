@@ -1,16 +1,11 @@
 # Chalamet
 
-![Chalamet workflow](https://github.com/brave-experiments/frodo-pir/actions/workflows/rust.yml/badge.svg)
+![Chalamet workflow](https://github.com/claucece/chalamet/actions/workflows/rust.yml/badge.svg)
 
-An implementation of the FrodoPIR Private Information Retrieval scheme. Find the details over [our eprint paper](https://eprint.iacr.org/2022/981.pdf).
+An implementation of the Chalamet Private Information Retrieval scheme. Find the details over [our eprint paper](https://eprint.iacr.org/2022/981.pdf).
 
-We design *FrodoPIR*, a highly configurable, stateful, single-server Private Information Retrieval (PIR)
-scheme that involves an offline phase that is completely client-independent. Coupled with small online
-overheads, it leads to much smaller amortized financial costs on the server-side than previous approaches.
-In terms of performance for a database of 1 million KB elements, FrodoPIR requires <1 second for
-responding to a client query, has a server response size blow-up factor of > 3.6x, and financial costs are
-~$1 for answering client queries. Our experimental analysis is built upon a simple, non-optimized
-Rust implementation, illustrating that FrodoPIR is eminently suitable for large practical deployments.
+We introduce **ChalametPIR**: a single-server Private Information Retrieval (PIR) scheme supporting fast, low-bandwidth keyword queries, with a conceptually very simple design. In particular, we develop a generic framework for converting from PIR schemes for flat arrays (based on the Learning With Errors problem) into keyword PIR, by representing a key-value map using any data storage filter. In particular, we make use of recently developed Binary Fuse Filters to achieve a keyword PIR scheme with minimal blow-up (bounded by a factor of ≤ 1.08) compared with state-of-the-art index-based schemes. We implement ChalametPIR in Rust, and show that it achieves runtimes and financial costs that are factors of
+between 6×-11× and 3.75×-11.4× more efficient, respectively, for varying database configurations. Bandwidth costs are either reduced or competitive depending on the configuration. While our focus is clearly on PIR, we believe that our application of Binary Fuse Filters may have independent value for other systems and cryptographic primitives.
 
 *Warning*: This code is a research prototype. Do not use it in production.
 
