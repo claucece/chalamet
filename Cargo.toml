@@ -1,7 +1,6 @@
 [package]
 name = "keyword-pir-lwe"
 version = "0.0.1"
-authors = ["Alex Davidson <coela@alxdavids.xyz>", "Sofía Celi <cherenkov@riseup.net>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
