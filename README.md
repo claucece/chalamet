@@ -2,8 +2,8 @@
 
 An implementation of the Chalamet Private Information Retrieval scheme.
 
-We introduce **ChalametPIR**: a single-server Private Information Retrieval (PIR) scheme supporting fast, low-bandwidth keyword queries, with a conceptually very simple design. In particular, we develop a generic framework for converting from PIR schemes for flat arrays (based on the Learning With Errors problem) into keyword PIR, by representing a key-value map using any data storage filter. In particular, we make use of recently developed Binary Fuse Filters to achieve a keyword PIR scheme with minimal blow-up (bounded by a factor of ≤ 1.08) compared with state-of-the-art index-based schemes. We implement ChalametPIR in Rust, and show that it achieves runtimes and financial costs that are factors of
-between 6×-11× and 3.75×-11.4× more efficient, respectively, for varying database configurations. Bandwidth costs are either reduced or competitive depending on the configuration. While our focus is clearly on PIR, we believe that our application of Binary Fuse Filters may have independent value for other systems and cryptographic primitives.
+We introduce **ChalametPIR**: a single-server Private Information Retrieval (PIR) scheme supporting fast, low-bandwidth keyword queries, with a conceptually very simple design. In particular, we develop a generic framework for converting PIR schemes for index queries over flat arrays (based on the Learning With Errors problem) into keyword PIR. This involves representing a key-value map using any probabilistic filter that permits reconstruction of elements from inclusion queries (e.g. Cuckoo filters). In particular, we make use of recently developed Binary Fuse filters to construct ChalametPIR, with minimal efficiency blow-up compared with state-of-the-art index-based schemes (all costs bounded by a factor of ≤ 1.08). Furthermore, we show that ChalametPIR achieves runtimes and financial costs that are factors of between 6×-11× and
+3.75×-11.4× more efficient, respectively, than state-of-the-art keyword PIR approaches, for varying database configurations. Bandwidth costs are additionally reduced or remain competitive, depending on the configuration. Finally, we believe that our application of Binary Fuse filters in the cryptography setting may bring immediate independent value towards developing efficient variants of other related primitives that benefit from using such filters.
 
 *Warning*: This code is a research prototype. Do not use it in production.
 
@@ -19,6 +19,8 @@ In order to natively build, run, test and benchmark the library, you will need t
 ```
 
 To obtain our performance numbers as reported in our paper, we run our benchmarks in AWS EC2 ``t2.t2xlarge`` and ``c5.9xlarge`` machines.
+
+Note that we internally use the [xorf](https://github.com/ayazhafiz/xorf) library, but we modify it as seen [here](https://github.com/claucece/chalamet/tree/main/bff-modp).
 
 ## Quickstart
 
@@ -53,8 +55,6 @@ We test:
 
 If all test build and run correctly, you should see an `ok` next to them.
 
-**Note**: Occasionally, one of the tests will fail with a `thread 'api::tests::client_query_to_server_10_times' panicked at 'assertion failed: (left == right)` error. This is due to the usage of specific parameters for testing and can be safely ignored.
-
 #### Documentation
 
 To view documentation (in a web browser manner):
@@ -76,12 +76,20 @@ This command will execute client query benchmarks and Database generation benchm
 To run all benchmarks (note that this process is very slow, it takes around 30 minutes):
 
 ```
-  make bench-all
+  make bench-standard
 ```
 
 This command will execute client query benchmarks and Database generation benchmarks for 16, 17, 18, 19 and 20 Number of DB items (log(m)). The results of these benchmarks can be found on Table 2 of our paper.
 
 In order to see the results of the benchmarks, navigate to the `benchmarks-x-x.txt` file.
+
+You can also run:
+
+```
+  make bench-keyword
+```
+
+to reproduce the results of Table 3 of our paper.
 
 If all benches build and run correctly, you should see an `Finished ... benchmarks` under them.
 We use [Criterion](https://bheisler.github.io/criterion.rs/book/index.html) for benchmarking.

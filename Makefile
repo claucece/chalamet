@@ -39,7 +39,7 @@ PYTHON_COMMAND=${DB_GEN_PRELIM} python3
 gen-db:
 	${PYTHON_COMMAND} data/generate_db.py
 
-.PHONY: build test docs bench bench-all
+.PHONY: build test docs bench bench-standard bench-keyword
 build:
 	${CARGO_COMMAND} build --release
 test:
