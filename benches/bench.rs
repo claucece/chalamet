@@ -19,6 +19,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     lwe_dim,
     elem_size,
     plaintext_bits,
+    offline,
     ..
   } = parse_from_env();
   let mut lwe_group = c.benchmark_group("lwe");
@@ -41,7 +42,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     .unwrap();
     println!("[KV] Setup complete, starting benchmarks...");
 
-    if BENCH_ONLINE {
+    if BENCH_ONLINE || !offline {
       _bench_client_kv_query(
         &mut lwe_group,
         &shard,
@@ -49,12 +50,14 @@ fn criterion_benchmark(c: &mut Criterion) {
       );
     }
 
-    if BENCH_DB_GEN {
+    if BENCH_DB_GEN || offline {
+      println!("[KV] Benchmarking offline steps...");
       lwe_group.sample_size(10);
       lwe_group.measurement_time(Duration::from_secs(100)); // To remove a warning, you can increase this to 500 or more.
       _bench_kv_db_generation(&mut lwe_group, &shard, &keys, &values);
     }
   } else {
+    println!("[KV] Benchmarking online steps...");
     let db_eles = bench_utils::generate_db_eles(m, (elem_size + 7) / 8);
     println!("Setting up DB for benchmarking. This might take a while...");
     let shard = Shard::from_base64_strings(

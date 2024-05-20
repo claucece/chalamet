@@ -6,6 +6,7 @@ pub struct CLIFlags {
   pub lwe_dim: usize,
   pub plaintext_bits: usize,
   pub elem_size: usize,
+  pub offline: bool,
 }
 
 pub fn parse_cli_flags() -> CLIFlags {
@@ -64,25 +65,34 @@ pub fn parse_cli_flags() -> CLIFlags {
     lwe_dim,
     plaintext_bits,
     elem_size,
+    offline: true,
   }
 }
 
 pub fn parse_from_env() -> CLIFlags {
-  let elem_size: usize = env::var("PIR_ELEM_SIZE_BITS").unwrap().parse().unwrap();
+  let elem_size: usize =
+    env::var("PIR_ELEM_SIZE_BITS").unwrap().parse().unwrap();
   let lwe_dim: usize = env::var("PIR_LWE_DIM").unwrap().parse().unwrap();
   let plaintext_bits: usize =
     env::var("PIR_PLAINTEXT_BITS").unwrap().parse().unwrap();
   let m = parse_exp_to_usize(env::var("PIR_NUMBER_OF_ELEMENTS_EXP").unwrap());
+  let offline = parse_val_to_bool(env::var("BENCH_DB_GEN").unwrap());
   CLIFlags {
     m,
     lwe_dim,
     plaintext_bits,
     elem_size,
+    offline,
   }
 }
 
 pub fn parse_exp_to_usize(v: String) -> usize {
   let exp: u32 = v.parse().unwrap();
   let res = 2_u32.pow(exp) as usize;
+  res
+}
+
+pub fn parse_val_to_bool(v: String) -> bool {
+  let res: bool = v.parse().unwrap();
   res
 }
