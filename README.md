@@ -150,7 +150,7 @@ Once this setup has completed, we see the following.
 [KV] Setup complete, starting benchmarks...
 [KV] Filter Params: segment-len: 2048, segment-len-mask: 2047, segment-count-len: 73728
 [KV] Starting client query benchmarks
-``
+```
 
 This describes the individual filter parameters for the filters being used, and informs us that the benchmarks will now be computed for each piece of functionality.
 
