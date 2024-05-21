@@ -7,6 +7,7 @@ pub struct CLIFlags {
   pub plaintext_bits: usize,
   pub elem_size: usize,
   pub offline: bool,
+  pub keyword: bool,
 }
 
 pub fn parse_cli_flags() -> CLIFlags {
@@ -66,6 +67,7 @@ pub fn parse_cli_flags() -> CLIFlags {
     plaintext_bits,
     elem_size,
     offline: true,
+    keyword: true,
   }
 }
 
@@ -77,12 +79,14 @@ pub fn parse_from_env() -> CLIFlags {
     env::var("PIR_PLAINTEXT_BITS").unwrap().parse().unwrap();
   let m = parse_exp_to_usize(env::var("PIR_NUMBER_OF_ELEMENTS_EXP").unwrap());
   let offline = parse_val_to_bool(env::var("BENCH_DB_GEN").unwrap());
+  let keyword = parse_val_to_bool(env::var("BENCH_KV").unwrap());
   CLIFlags {
     m,
     lwe_dim,
     plaintext_bits,
     elem_size,
     offline,
+    keyword,
   }
 }
 

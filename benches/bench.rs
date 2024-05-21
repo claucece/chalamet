@@ -18,11 +18,12 @@ fn criterion_benchmark(c: &mut Criterion) {
     elem_size,
     plaintext_bits,
     offline,
+    keyword,
     ..
   } = parse_from_env();
   let mut lwe_group = c.benchmark_group("lwe");
 
-  if BENCH_KV {
+  if keyword {
     println!("[KV] Starting benches for keyword PIR.");
     println!("[KV] Setting up DB for benchmarking. This might take a while...");
     println!("[KV] The params are: m: {}, lwe_dim: {}, elem_size: {}, plaintext-bits: {}", m, lwe_dim, elem_size, plaintext_bits);

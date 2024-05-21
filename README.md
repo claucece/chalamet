@@ -95,7 +95,7 @@ This command will execute client query benchmarks and Database generation benchm
 To run all benchmarks  as reported in lines 1-10 of Table 2 of our paper (note that this process is very slow, it takes around 30 minutes):
 
 ```
-  make bench-standard
+  make bench-keyword-standard
 ```
 
 This command will execute client query benchmarks and Database generation benchmarks for 16, 17, 18, 19 and 20 Number of DB items (log(m)). The results of these benchmarks can be found on Table 2 of our paper.
@@ -121,6 +121,15 @@ In order to make the results of lines 11-13 of Table 2 of our paper and of Table
 ```
 
 which omit any offline steps, and can be run independently for 2^20 x 256B, 2^17 x 30kB and 2^14 x 100kB.
+
+---
+
+In order to run the benchmarks for Table 4 (index-based PIR with FrodoPIR), one can one:
+
+```
+  make bench-index-standard #For lines 1-10
+  make bench-index-all #For lines 11-13
+```
 
 ---
 
