@@ -18,9 +18,10 @@ In order to natively build, run, test and benchmark the library, you will need t
   Python3 >= 3.9.7
 ```
 
-To obtain our performance numbers as reported in our paper, we run our benchmarks in AWS EC2 ``t2.t2xlarge`` and ``c5.9xlarge`` machines.
-
 Note that we internally use the [xorf](https://github.com/ayazhafiz/xorf) library, but we modify it as seen [here](https://github.com/claucece/chalamet/tree/main/bff-modp).
+
+To obtain our performance numbers as reported in Table 2 of our paper, we run our benchmarks in AWS EC2 ``t2.t2xlarge`` and ``c5.9xlarge`` machines, as reported.
+
 
 ## Quickstart
 
@@ -65,7 +66,22 @@ To view documentation (in a web browser manner):
 
 #### Benchmarking
 
-To run a specific set of benchmarks, run (note the this process is slow. On average, it takes 12 minutes):
+There are several parameters that you can pass as flag to the `cargo bench` command, so that you can test the scheme.
+These are (with their default values):
+
+```
+NUMBER_OF_ELEMENTS_EXP=16 (the m value of a DB: the number of rows)
+LWE_DIMENSION=1774 (The LWE dimension)
+ELEMENT_SIZE_BITS=8192 # 2**13 (the size of each element in bits)
+PLAINTEXT_SIZE_EXP=10 (the size of each plaintext element: determines w of a DB: the size of the rows)
+NUM_SHARDS=8
+DB=true (if the offline steps will be bechmarked: these steps are very slow)
+
+```
+
+---
+
+To run a simple benchmark (for a DB of 2^16 x 1024B) with offline steps, run (note the this process is slow. On average, it takes 12 minutes):
 
 ```
   make bench
@@ -73,7 +89,8 @@ To run a specific set of benchmarks, run (note the this process is slow. On aver
 
 This command will execute client query benchmarks and Database generation benchmarks (for more details, see the `benches/bench.rs` file).
 
-To run all benchmarks (note that this process is very slow, it takes around 30 minutes):
+---
+To run all benchmarks  as reported in lines 1-10 of Table 2 of our paper (note that this process is very slow, it takes around 30 minutes):
 
 ```
   make bench-standard
@@ -83,13 +100,27 @@ This command will execute client query benchmarks and Database generation benchm
 
 In order to see the results of the benchmarks, navigate to the `benchmarks-x-x.txt` file.
 
-You can also run:
+---
+To run all benchmarks as reported in lines 11-13 of Table 2 of our paper and of Table 3 (note that this process is significantly slow):
 
 ```
-  make bench-keyword
+  make bench-keyword-all
 ```
 
-to reproduce the results of Table 3 of our paper.
+In order to see the results of the benchmarks, navigate to the `benchmarks-x-x.txt` file.
+
+In order to make the results of lines 11-13 of Table 2 of our paper and of Table 3 of our paper easier to reproduce, we have made available these three commands:
+
+
+```
+  make bench-keyword-20
+  make bench-keyword-14
+  make bench-keyword-17
+```
+
+which omit any offline steps, and can be run independently for 2^20 x 256B, 2^17 x 30kB and 2^14 x 100kB.
+
+---
 
 If all benches build and run correctly, you should see an `Finished ... benchmarks` under them.
 We use [Criterion](https://bheisler.github.io/criterion.rs/book/index.html) for benchmarking.
