@@ -10,8 +10,6 @@ use std::time::Duration;
 use keyword_pir_lwe::db::FilterParams;
 
 const BENCH_KV: bool = true;
-const BENCH_ONLINE: bool = true;
-const BENCH_DB_GEN: bool = false;
 
 fn criterion_benchmark(c: &mut Criterion) {
   let CLIFlags {
@@ -28,6 +26,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     println!("[KV] Starting benches for keyword PIR.");
     println!("[KV] Setting up DB for benchmarking. This might take a while...");
     println!("[KV] The params are: m: {}, lwe_dim: {}, elem_size: {}, plaintext-bits: {}", m, lwe_dim, elem_size, plaintext_bits);
+    println!("[KV] Are we benchmarking offline steps? {}", offline);
 
     let kv_db_eles = bench_utils::generate_kv_db_elems(m, (elem_size + 7) / 8);
     let keys: Vec<String> = kv_db_eles.iter().map(|e| e.0.clone()).collect();
@@ -43,16 +42,14 @@ fn criterion_benchmark(c: &mut Criterion) {
     .unwrap();
     println!("[KV] Setup complete, starting benchmarks...");
 
-    if BENCH_ONLINE || !offline {
-      println!("[KV] Benchmarking online steps...");
-      _bench_client_kv_query(
-        &mut lwe_group,
-        &shard,
-        (keys[0].clone(), values[0].clone()),
-      );
-    }
+    println!("[KV] Benchmarking online steps...");
+    _bench_client_kv_query(
+      &mut lwe_group,
+      &shard,
+      (keys[0].clone(), values[0].clone()),
+    );
 
-    if BENCH_DB_GEN || offline {
+    if offline {
       println!("[KV] Benchmarking offline steps...");
       lwe_group.sample_size(10);
       lwe_group.measurement_time(Duration::from_secs(100)); // To remove a warning, you can increase this to 500 or more.
@@ -72,12 +69,10 @@ fn criterion_benchmark(c: &mut Criterion) {
     .unwrap();
     println!("[I] Setup complete, starting benchmarks");
 
-    if BENCH_ONLINE {
-      println!("[I] Benchmarking online steps...");
-      _bench_client_query(&mut lwe_group, &shard);
-    }
+    println!("[I] Benchmarking online steps...");
+    _bench_client_query(&mut lwe_group, &shard);
 
-    if BENCH_DB_GEN {
+    if offline {
       println!("[I] Benchmarking offline steps...");
       lwe_group.sample_size(10);
       lwe_group.measurement_time(Duration::from_secs(100)); // To remove a warning, you can increase this to 500 or more.
