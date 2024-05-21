@@ -25,6 +25,7 @@ fn criterion_benchmark(c: &mut Criterion) {
   let mut lwe_group = c.benchmark_group("lwe");
 
   if BENCH_KV {
+    println!("[KV] Starting benches for keyword PIR.");
     println!("[KV] Setting up DB for benchmarking. This might take a while...");
     println!("[KV] The params are: m: {}, lwe_dim: {}, elem_size: {}, plaintext-bits: {}", m, lwe_dim, elem_size, plaintext_bits);
 
@@ -43,6 +44,7 @@ fn criterion_benchmark(c: &mut Criterion) {
     println!("[KV] Setup complete, starting benchmarks...");
 
     if BENCH_ONLINE || !offline {
+      println!("[KV] Benchmarking online steps...");
       _bench_client_kv_query(
         &mut lwe_group,
         &shard,
@@ -57,9 +59,9 @@ fn criterion_benchmark(c: &mut Criterion) {
       _bench_kv_db_generation(&mut lwe_group, &shard, &keys, &values);
     }
   } else {
-    println!("[KV] Benchmarking online steps...");
+    println!("[I] Starting benches for index PIR.");
     let db_eles = bench_utils::generate_db_eles(m, (elem_size + 7) / 8);
-    println!("Setting up DB for benchmarking. This might take a while...");
+    println!("[I] Setting up DB for benchmarking. This might take a while...");
     let shard = Shard::from_base64_strings(
       &db_eles,
       lwe_dim,
@@ -68,11 +70,15 @@ fn criterion_benchmark(c: &mut Criterion) {
       plaintext_bits,
     )
     .unwrap();
-    println!("Setup complete, starting benchmarks");
+    println!("[I] Setup complete, starting benchmarks");
+
     if BENCH_ONLINE {
+      println!("[I] Benchmarking online steps...");
       _bench_client_query(&mut lwe_group, &shard);
     }
+
     if BENCH_DB_GEN {
+      println!("[I] Benchmarking offline steps...");
       lwe_group.sample_size(10);
       lwe_group.measurement_time(Duration::from_secs(100)); // To remove a warning, you can increase this to 500 or more.
       _bench_db_generation(&mut lwe_group, &shard, &db_eles);
