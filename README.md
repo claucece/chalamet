@@ -79,6 +79,8 @@ DB=true (if the offline steps will be bechmarked: these steps are very slow)
 
 ```
 
+These can also be found on the Makefile (lines 9-14).
+
 ---
 
 To run a simple benchmark (for a DB of 2^16 x 1024B) with offline steps, run (note the this process is slow. On average, it takes 12 minutes):
@@ -127,6 +129,43 @@ We use [Criterion](https://bheisler.github.io/criterion.rs/book/index.html) for 
 If you want to see and have explanations of the benchmarks, you can locally open `target/criterion/report/index.html` in your browser.
 
 **Note**: When running the benches, a warning might appear ``Warning: Unable to complete 10 samples in 100.0s. You may wish to increase target time to 486.6s.``. If you want to silence the warning, you can change line 30 of `benches/bech.rs` file to 500 or more. Note that this will make the running of benches slower.
+
+In order to interpret the `benchmarks-x-x.txt` files, we provide some guidance here:
+
+
+First, we have the initial lines describing the parameters for the benchmark.
+
+```
+[KV] Starting benches for keyword PIR.
+[KV] Setting up DB for benchmarking. This might take a while...
+[KV] The params are: m: 65536, lwe_dim: 1774, elem_size: 8192, plaintext-bits: 10
+[KV] Are we benchmarking offline steps? true
+```
+
+These simply describe the LWE parameters for running the PIR interaction, note that the [KV] part here shows that we are running the keyword PIR benchmarks. This part can take a while, as the database and the public parameters are being generated for the interaction. It also states if we are running any offline steps, which can be omitted as they are significantly slow.
+
+Once this setup has completed, we see the following.
+
+```
+[KV] Setup complete, starting benchmarks...
+[KV] Filter Params: segment-len: 2048, segment-len-mask: 2047, segment-count-len: 73728
+[KV] Starting client query benchmarks
+``
+
+This describes the individual filter parameters for the filters being used, and informs us that the benchmarks will now be computed for each piece of functionality.
+
+Each individual benchmark is then displayed in the following way.
+
+```
+Benchmarking lwe/[KV] server response, lwe_dim: 1774, matrix_height: 77824, omega: 820: Collecting 100 samples in estimated 5.2698 s (300 iterations)
+Benchmarking lwe/[KV] server response, lwe_dim: 1774, matrix_height: 77824, omega: 820: Analyzing
+lwe/[KV] server response, lwe_dim: 1774, matrix_height: 77824, omega: 820
+                        time:   [17.566 ms 17.670 ms 17.789 ms]
+```
+
+The middle time here is the average taken over the number of samples displayed. The name of the benchmark in this case is "server response", which took 17.67ms, and this is the value that we used in the paper.
+
+In terms of Table 2, the key benchmarks are "create client query prepare" (Query), "server response" (Response), and "client parse server response" (Parsing), as these are the main online operations in the protocol.
 
 ### Tests
 
