@@ -124,7 +124,7 @@ which omit any offline steps, and can be run independently for 2^20 x 256B, 2^17
 
 ---
 
-In order to run the benchmarks for Table 4 (index-based PIR with FrodoPIR), one can one:
+In order to run the benchmarks for Table 4 (index-based PIR with FrodoPIR), one can run:
 
 ```
   make bench-index-standard #For lines 1-10
