@@ -11,7 +11,7 @@ use keyword_pir_lwe::db::FilterParams;
 
 const BENCH_KV: bool = true;
 const BENCH_ONLINE: bool = true;
-const BENCH_DB_GEN: bool = true;
+const BENCH_DB_GEN: bool = false;
 
 fn criterion_benchmark(c: &mut Criterion) {
   let CLIFlags {
