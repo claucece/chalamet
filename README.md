@@ -76,6 +76,7 @@ ELEMENT_SIZE_BITS=8192 # 2**13 (the size of each element in bits)
 PLAINTEXT_SIZE_EXP=10 (the size of each plaintext element: determines w of a DB: the size of the rows)
 NUM_SHARDS=8
 DB=true (if the offline steps will be bechmarked: these steps are very slow)
+KV=true (if you want to execute the keyword-based PIR or else the index-based)
 
 ```
 
@@ -129,6 +130,16 @@ In order to run the benchmarks for Table 4 (index-based PIR with FrodoPIR), one 
 ```
   make bench-index-standard #For lines 1-10
   make bench-index-all #For lines 11-13
+```
+
+Note that those directions take a long time as they execute the offline steps as well.
+
+One can run the following to omit the offline steps:
+
+```
+  make bench-index-20
+  make bench-index-14
+  make bench-index-17
 ```
 
 ---
