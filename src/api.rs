@@ -66,8 +66,8 @@ impl Shard {
     Ok(())
   }
 
-  // Produces a serialized response (base64-encoded) to a serialized
-  // client query
+  /// Produces a serialized response (base64-encoded) to a serialized
+  /// client query
   pub fn respond(&self, q: &Query) -> ResultBoxedError<Vec<u8>> {
     let q = q.as_slice();
     let resp = Response(
@@ -98,6 +98,7 @@ impl Shard {
   }
 }
 
+/// EncodeKV represents an encoded key-value struct.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct EncodedKV {
   key: String,
@@ -212,8 +213,8 @@ impl KVShard {
     Ok(())
   }
 
-  // Produces a serialized response (base64-encoded) to a serialized
-  // client query
+  /// Produces a serialized response (base64-encoded) to a serialized
+  /// client query
   pub fn respond(&self, q: &Query) -> ResultBoxedError<Vec<u8>> {
     let resp = Response(
       (0..self.db.get_row_width_self())
