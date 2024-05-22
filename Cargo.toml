@@ -30,3 +30,6 @@ pi-rs-cli-utils = {path = "./pi-rs-cli-utils"}
 [[bench]]
 name = "bench"
 harness = false
+
+[lib]
+bench = false
