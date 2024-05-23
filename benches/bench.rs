@@ -9,8 +9,6 @@ use std::time::Duration;
 
 use keyword_pir_lwe::db::FilterParams;
 
-const BENCH_KV: bool = true;
-
 fn criterion_benchmark(c: &mut Criterion) {
   let CLIFlags {
     m,
@@ -23,12 +21,12 @@ fn criterion_benchmark(c: &mut Criterion) {
   } = parse_from_env();
   let mut lwe_group = c.benchmark_group("lwe");
 
-  if keyword {
-    println!("[KV] Starting benches for keyword PIR.");
-    println!("[KV] Setting up DB for benchmarking. This might take a while...");
-    println!("[KV] The params are: m: {}, lwe_dim: {}, elem_size: {}, plaintext-bits: {}", m, lwe_dim, elem_size, plaintext_bits);
-    println!("[KV] Are we benchmarking offline steps? {}", offline);
+  println!("Chosen parameters are: m: {}, lwe_dim: {}, elem_size: {}, plaintext-bits: {}", m, lwe_dim, elem_size, plaintext_bits);
+  println!("Benchmarking offline: {}", offline);
+  println!("Benchmarking keyword: {}", keyword);
+  println!("Setting up DB for benchmarking. This might take a while...");
 
+  if keyword {
     let kv_db_eles = bench_utils::generate_kv_db_elems(m, (elem_size + 7) / 8);
     let keys: Vec<String> = kv_db_eles.iter().map(|e| e.0.clone()).collect();
     let values: Vec<String> = kv_db_eles.iter().map(|e| e.1.clone()).collect();
@@ -57,9 +55,7 @@ fn criterion_benchmark(c: &mut Criterion) {
       _bench_kv_db_generation(&mut lwe_group, &shard, &keys, &values);
     }
   } else {
-    println!("[I] Starting benches for index PIR.");
     let db_eles = bench_utils::generate_db_eles(m, (elem_size + 7) / 8);
-    println!("[I] Setting up DB for benchmarking. This might take a while...");
     let shard = Shard::from_base64_strings(
       &db_eles,
       lwe_dim,
